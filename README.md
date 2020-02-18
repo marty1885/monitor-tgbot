@@ -37,7 +37,7 @@ c.bot.token = "132648513:haeohNLANDKban21ja8coanLANlnca64530" -- this is a made 
 Then you'll need to generate a password for the bot. The password authenticaes an account to be added to the list of brodcat. Then you will be notified when services goes down.
 
 ```bash
-cd /path/to/monitor-tgbot/build
+❯ cd /path/to/monitor-tgbot/build
 ❯ ./monitor-tgbot --gen-password
 Password:
 
@@ -57,5 +57,5 @@ c.monitor.services = {"tor", "sshd"}
 c.monitor.interval = 300
 ```
 
-There are other configurations you can do or overwrite the values via command line. See `monitorbot_config.lua` and `./monitor-tgbot for more information`
+There are other configurations you can do or overwrite the values via command line. See `monitorbot_config.lua` and `./monitor-tgbot` for more information`
 
