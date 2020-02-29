@@ -28,15 +28,27 @@ void send_message(Bot& bot, std::set<int64_t>& user_list, const std::string& mes
 	}
 }
 
+template <typename ForwardIterator>
+std::string join(ForwardIterator begin, ForwardIterator end, const std::string delim)
+{
+	std::string res;
+	for(auto it = begin; it != end; it++)
+		res += *it + delim;
+	res.resize(res.size()-delim.size());
+	return res;
+}
+
+
 void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 {
 	std::set<std::string> known_down_services;
 	while(true) {
+		std::vector<std::string> down_services;
 		const auto services = conf.services;
 		for(const auto& service : services) {
 			if(service_alive(service) == false) {
 				if(known_down_services.find(service) == known_down_services.end())
-					send_message(bot, user_list, "Hey, \'" + service + "\' is down. You might want to check that.");
+					down_services.push_back(service);
 				known_down_services.insert(service);
 			}
 			else {
@@ -45,6 +57,9 @@ void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 					known_down_services.erase(it);
 			}
 		}
+
+		std::string service_str = join(down_services.begin(), down_services.end(), ",");
+		send_message(bot, user_list, "Hey, " + service_str + " is/are down. You might want to check that.");
 
 		std::this_thread::sleep_for(std::chrono::seconds(conf.interval));
 	}
