@@ -35,8 +35,8 @@ void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 		const auto services = conf.services;
 		for(const auto& service : services) {
 			if(service_alive(service) == false) {
-				if(known_down_services.find(service) != known_down_services.end())
-					send_message(bot, user_list, "Hey, service " + service + " is down. You might want to check that.");
+				if(known_down_services.find(service) == known_down_services.end())
+					send_message(bot, user_list, "Hey, \'" + service + "\' is down. You might want to check that.");
 				known_down_services.insert(service);
 			}
 			else {
