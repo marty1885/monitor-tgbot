@@ -58,8 +58,10 @@ void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 			}
 		}
 
-		std::string service_str = join(down_services.begin(), down_services.end(), ",");
-		send_message(bot, user_list, "Hey, " + service_str + " is/are down. You might want to check that.");
+        if(down_services.empty() == false) {
+    		std::string service_str = join(down_services.begin(), down_services.end(), ",");
+	    	send_message(bot, user_list, "Hey, " + service_str + " is/are down. You might want to check that.");
+        }
 
 		std::this_thread::sleep_for(std::chrono::seconds(conf.interval));
 	}
