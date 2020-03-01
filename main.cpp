@@ -60,7 +60,8 @@ void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 
         if(down_services.empty() == false) {
     		std::string service_str = join(down_services.begin(), down_services.end(), ",");
-	    	send_message(bot, user_list, "Hey, " + service_str + " is/are down. You might want to check that.");
+	    	send_message(bot, user_list, "Hey, " + service_str + (down_services.size() == 1 ? " is" : " are") 
+		    	+ " down. You might want to check that.");
         }
 
 		std::this_thread::sleep_for(std::chrono::seconds(conf.interval));
@@ -100,9 +101,11 @@ int main(int argc, char** argv)
 
 	bot.getEvents().onAnyMessage([&bot, &user_list, &db, &c](Message::Ptr message) {
 		auto uid = message->chat->id;
-		std::cout << uid << std::endl;
 		if(c.bot.password == "") {
 			bot.getApi().sendMessage(uid, "Password have not been set. Please set the password before trying activating the bot.");
+			return;
+		}
+		else if(StringTools::startsWith(message->text, "/")) {
 			return;
 		}
 
