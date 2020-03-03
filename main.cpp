@@ -128,13 +128,19 @@ int main(int argc, char** argv)
 	monitor_thread.detach();
 
 	// Run the bot
-	try {
-		bot.getApi().deleteWebhook();
-		TgLongPoll longPoll(bot);
-		while (true) 
-			longPoll.start();
-	}
-	catch (std::exception& e) {
-		printf("error: %s\n", e.what());
+	while(true) {
+		try {
+			bot.getApi().deleteWebhook();
+			TgLongPoll longPoll(bot);
+			while (true) 
+				longPoll.start();
+		}
+		catch (std::exception& e) {
+			std::string error_message = e.what();
+			if(error_message.find("Connection reset by peer") != std::string::npos)
+				printf("Event timeout: Re-establishing HTTP long polling\n");
+			else
+				printf("error: %s\n", error_message.c_str());
+		}
 	}
 }
