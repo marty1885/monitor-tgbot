@@ -49,7 +49,8 @@ void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 			if(service_alive(service) == false) {
 				if(known_down_services.find(service) == known_down_services.end())
 					down_services.push_back(service);
-				known_down_services.insert(service);
+                                else
+        				known_down_services.insert(service);
 			}
 			else {
 				auto it = known_down_services.find(service);

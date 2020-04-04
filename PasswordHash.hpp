@@ -10,7 +10,7 @@
 
 #include <openssl/sha.h>
 
-inline std::string sha256(const std::string str)
+inline std::string sha256(const std::string& str)
 {
 	unsigned char hash[SHA256_DIGEST_LENGTH+1];
 	SHA256_CTX sha256;
