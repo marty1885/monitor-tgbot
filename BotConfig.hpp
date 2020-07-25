@@ -7,6 +7,7 @@ struct MonitorConfig
 {
 	std::vector<std::string> services;
 	int interval = 300;
+        int fireup_delay = 120;
 };
 
 struct BotConfig

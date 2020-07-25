@@ -42,6 +42,7 @@ std::string join(ForwardIterator begin, ForwardIterator end, const std::string d
 void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 {
 	std::set<std::string> known_down_services;
+        std::this_thread::sleep_for(std::chrono::seconds(conf.fireup_delay));
 	while(true) {
 		std::vector<std::string> down_services;
 		const auto services = conf.services;

@@ -37,6 +37,7 @@ Config parse_and_load(int argc, char** argv)
 		("t,token", "The token of your Telegram bot")
 		("dbpath", "The SQLIte DB which stores information")
 		("interval", "How long do we mointor the service status once.")
+                ("fireup_delay", "Wait for `fireup_delay` before first detection.")
 		("services", "The services to monitor.",  cxxopts::value<std::vector<std::string>>())
 		("gen-password", "The program will ask you for a password and hash it.")
 		("password", "(Recommend not to use) set the password used.")
@@ -68,7 +69,8 @@ Config parse_and_load(int argc, char** argv)
 	// Make the Lua binding
 	lua.new_usertype<MonitorConfig>("MonitorConfig"
 		, "services", &MonitorConfig::services
-		, "interval", &MonitorConfig::interval);
+		, "interval", &MonitorConfig::interval
+                , "fireup_delay", &MonitorConfig::fireup_delay);
 	lua.new_usertype<BotConfig>("BotConfig"
 		, "token", &BotConfig::token
 		, "db_path", &BotConfig::db_path

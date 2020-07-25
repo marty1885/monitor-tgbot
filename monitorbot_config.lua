@@ -4,6 +4,9 @@
 -- How long do we wait to test if services are alive?
 -- c.monitor.interval = 300
 
+-- How long to wait before the first detection?
+-- c.monitor.fireup_delay = 120
+
 -- The Telegram bot token
 -- c.bot.token = ""
 
