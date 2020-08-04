@@ -9,6 +9,7 @@ This a light weight [Telegram](https://telegram.org/) bot that watches your syst
 * [Sol2](https://github.com/ThePhD/sol2)
 * [systemd](https://freedesktop.org/wiki/Software/systemd/)
 * [SQLiteCpp](https://github.com/SRombauts/SQLiteCpp)
+* [OpenSSL](https://www.openssl.org/)
 * A C++17 capable compiler
 
 ## How to build
@@ -20,11 +21,6 @@ cd build
 cmake ..
 make
 ```
-
-### CMake parameters
-|Name          |Description                                |
-|--------------|-------------------------------------------|
-|LUA_VERSION   |The Lua version to use (defaults to 5.3)   |
 
 ## How to use
 
