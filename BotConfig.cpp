@@ -57,7 +57,8 @@ Config parse_and_load(int argc, char** argv)
 	}
 
 	// Make sure the default configuration folder exists
-	if(fs::exists(default_config_dir) == false) 
+	// But don't if there's no $HOME
+	if(home.empty() == false && fs::exists(default_config_dir) == false) 
 		fs::create_directory(default_config_dir);
 
 	std::string config_file = args["config-file"].as<std::string>();
