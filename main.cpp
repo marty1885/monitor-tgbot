@@ -38,28 +38,43 @@ std::string join(ForwardIterator begin, ForwardIterator end, const std::string d
 	return res;
 }
 
+static std::set<std::string> g_known_down_services;
+
+std::vector<std::string> get_down_services(const MonitorConfig& conf)
+{
+	std::vector<std::string> down_services;
+	const auto services = conf.services;
+	for(const auto& service : services) {
+		auto it = g_known_down_services.find(service);
+		if(service_alive(service) == false) {
+			if(it == g_known_down_services.end())
+				down_services.push_back(service);
+		}
+		else {
+			if(it != g_known_down_services.end())
+				g_known_down_services.erase(it);
+		}
+	}
+	return down_services;
+}
+
+void ack(Bot& bot, uint64_t uid, const MonitorConfig& conf)
+{
+	if(g_known_down_services.size() == 0) {
+		bot.getApi().sendMessage(uid, "There's nothing going wrong. What's up?");
+		return;
+	}
+	auto down_services = get_down_services(conf);
+	for(const auto& service : down_services)
+		g_known_down_services.insert(service);
+	bot.getApi().sendMessage(uid, "Got it! Won't bother you with them anymore.");
+}
 
 void monitor(Bot& bot, std::set<int64_t>& user_list, const MonitorConfig& conf)
 {
-	std::set<std::string> known_down_services;
         std::this_thread::sleep_for(std::chrono::seconds(conf.fireup_delay));
 	while(true) {
-		std::vector<std::string> down_services;
-		const auto services = conf.services;
-		for(const auto& service : services) {
-			if(service_alive(service) == false) {
-				if(known_down_services.find(service) == known_down_services.end())
-					down_services.push_back(service);
-                                else
-        				known_down_services.insert(service);
-			}
-			else {
-				auto it = known_down_services.find(service);
-				if(it != known_down_services.end())
-					known_down_services.erase(it);
-			}
-		}
-
+		auto down_services = get_down_services(conf);
 		if(down_services.empty() == false) {
     			std::string service_str = join(down_services.begin(), down_services.end(), ", ");
 	    		send_message(bot, user_list, "Hey, " + service_str + (down_services.size() == 1 ? " is" : " are") 
@@ -88,6 +103,11 @@ int main(int argc, char** argv)
 
 	bot.getEvents().onCommand("ping", [&bot](Message::Ptr message) {
 		bot.getApi().sendMessage(message->chat->id, "Pong!");
+	});
+
+	bot.getEvents().onCommand("ack", [&bot, &c, &user_list](Message::Ptr message) {
+		if(user_list.count(message->chat->id) != 0)
+			ack(bot, message->chat->id, c.monitor);
 	});
 
 	bot.getEvents().onCommand("monitered_services", [&bot, &c, &user_list](Message::Ptr message) {
