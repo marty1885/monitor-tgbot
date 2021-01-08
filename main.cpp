@@ -7,6 +7,8 @@
 
 #include <cstdlib>
 
+// Workarround Boost's new behaivur
+#define BOOST_BIND_GLOBAL_PLACEHOLDERS
 #include <tgbot/tgbot.h>
 
 #include "BotDatabase.hpp"
@@ -45,10 +47,12 @@ std::vector<std::string> get_down_services(const MonitorConfig& conf)
 	std::vector<std::string> down_services;
 	const auto services = conf.services;
 	for(const auto& service : services) {
-		auto it = g_known_down_services.find(service);
+		const auto it = g_known_down_services.find(service);
 		if(service_alive(service) == false) {
-			if(it == g_known_down_services.end())
+			if(it == g_known_down_services.end()) {
+				g_known_down_services.insert(service);
 				down_services.push_back(service);
+			}		
 		}
 		else {
 			if(it != g_known_down_services.end())
