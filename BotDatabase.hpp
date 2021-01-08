@@ -1,8 +1,10 @@
 #pragma once
 
 #include <SQLiteCpp/SQLiteCpp.h>
+#include <SQLiteCpp/VariadicBind.h>
 
 #include <set>
+#include <stdexcept>
 
 struct BotDatabase
 {
@@ -29,7 +31,10 @@ struct BotDatabase
 	void addUser(int64_t uid)
 	{
 		SQLite::Transaction transaction(db);
-		db.exec(R"(INSERT INTO users VALUES ()"+std::to_string(uid)+");");
+		SQLite::Statement query(db, "INSERT INTO users VALUES (?)");
+		SQLite::bind(query, uid);
+		if(query.exec() == false)
+			throw std::runtime_error("Failed to add user into user list");
 		transaction.commit();
 	}
 	SQLite::Database db;
