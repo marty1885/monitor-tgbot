@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 			ack(bot, message->chat->id, c.monitor);
 	});
 
-	bot.getEvents().onCommand("monitered_services", [&bot, &c, &user_list](Message::Ptr message) {
+	bot.getEvents().onCommand("monitored_services", [&bot, &c, &user_list](Message::Ptr message) {
 		if(user_list.find(message->chat->id) == user_list.end())
 			return;
 		std::string res = "Currently ";

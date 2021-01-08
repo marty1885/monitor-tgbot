@@ -53,5 +53,20 @@ c.monitor.services = {"tor", "sshd"}
 c.monitor.interval = 300
 ```
 
-There are other configurations you can do or overwrite the values via command line. See `monitorbot_config.lua` and `./monitor-tgbot` for more information`
+There are other configurations you can do or overwrite the values via command line. See `monitorbot_config.lua` and `./monitor-tgbot` for more information
 
+Now it's time to launch the bot.
+```
+❯ ./monitor-tgbot 
+```
+
+Go to your bot in Telegram. **Type in your password. And the bot will confirm that you are added to the list of users.**
+
+
+## Supported Commands
+
+```
+ping - Pong!
+monitored_services - Replies a list of monitored service
+ack - acknowledges that I know the service is down. Don't bother me again
+```
